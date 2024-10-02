@@ -15,9 +15,9 @@ public class FakerGenerator {
 
     public static List<Product> createProduct(int amount) {
         List<Product> products = new ArrayList<>();
-        for (int i = 1; i < amount; i++) {
+        for (int i = 0; i < amount; i++) {
             Product product = new Product();
-            product.setId(i);
+            product.setId(i + 1);
             product.setName(huFaker.commerce().productName());
             product.setPrice(huFaker.number().randomDouble(2,1,1000));
             product.setDescription(huFaker.lorem().sentence(10));
