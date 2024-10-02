@@ -2,9 +2,11 @@ package com.szabolcs.SpringbootWebshop.Service;
 
 import com.szabolcs.SpringbootWebshop.Model.Product;
 
+import java.util.List;
+
 public interface IProductService {
 
-    Product getAllProducts();
+    List<Product> getAllProducts();
     Product getProductById(int id);
     Product createProduct(Product newProduct);
     void updateProduct(Product upDatedProduct, int id);
