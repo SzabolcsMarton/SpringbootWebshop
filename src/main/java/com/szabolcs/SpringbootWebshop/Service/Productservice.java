@@ -39,10 +39,13 @@ public class Productservice implements IProductService{
 
     @Override
     public boolean updateProduct(ProductDto productDto, long id) {
-        Product product = fakeProductRepo.findById(id).orElseThrow(()-> new ProductNotFoundException("No product to update with id: " + id));
-        fakeProductRepo.deleteById(product.getId());
-        Product resultProduct = fakeProductRepo.save(mapProductToDtoProduct(product, productDto));
-        return resultProduct != null;
+        Optional<Product> product = fakeProductRepo.findById(id);
+        if (product.isPresent()) {
+            fakeProductRepo.deleteById(product.get().getId());
+            fakeProductRepo.save(mapProductToDtoProduct(product.get(), productDto));
+            return true;
+        }
+        throw new ProductNotFoundException("No product for update with id: "+ id);
     }
 
     @Override
