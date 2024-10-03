@@ -40,9 +40,6 @@ public class Productservice implements IProductService{
     @Override
     public void updateProduct(ProductDto productDto, long id) {
         Optional<Product> product = fakeProductRepo.findById(id);
-        if (product.isEmpty()) {
-            throw new ProductNotFoundException("No product for update with id: "+ id);
-        }
         fakeProductRepo.deleteById(product.get().getId());
         fakeProductRepo.save(mapProductToDtoProduct(product.get(), productDto));
 
