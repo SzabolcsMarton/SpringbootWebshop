@@ -26,7 +26,11 @@ public class FakeProductRepo {
     }
 
     public Optional<Product> findById(long id){
-        return products.stream().filter(product -> product.getId() == id).findFirst();
+        Optional<Product> product = products.stream().filter(p -> p.getId() == id).findFirst();
+        if(product.isEmpty()){
+            throw new ProductNotFoundException("Not found Product with id :" + id);
+        }
+        return product;
     }
 
     public Product save(Product product){
@@ -39,7 +43,7 @@ public class FakeProductRepo {
 
     public void deleteById(long id){
         if(products.stream().filter(product -> product.getId() == id).findFirst().isEmpty()){
-            throw new ProductNotFoundException("No product to delete with id :" +id);
+            throw new ProductNotFoundException("No product to delete with id :" + id);
         }
         products.removeIf(product -> product.getId() == id);
     }
