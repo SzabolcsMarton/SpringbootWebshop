@@ -11,7 +11,7 @@ public interface IProductService {
     List<Product> getAllProducts();
     Optional<Product> getProductById(long id);
     Optional<Product> createProduct(ProductDto productDto);
-    boolean updateProduct(ProductDto productDto, long id);
+    void updateProduct(ProductDto productDto, long id);
     void deleteProduct(long id);
 
 }
