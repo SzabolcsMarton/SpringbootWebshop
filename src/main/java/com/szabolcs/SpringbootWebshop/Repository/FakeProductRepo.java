@@ -7,6 +7,7 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +30,9 @@ public class FakeProductRepo {
     }
 
     public Product save(Product product){
+        if(product.getId() == 0){
+            product.setId(getNextId());
+        }
         products.add(product);
         return product;
     }
@@ -38,5 +42,9 @@ public class FakeProductRepo {
             throw new ProductNotFoundException("No product to delete with id :" +id);
         }
         products.removeIf(product -> product.getId() == id);
+    }
+
+    private long getNextId(){
+        return products.stream().map(Product::getId).max(Comparator.naturalOrder()).get() + 1 ;
     }
 }
