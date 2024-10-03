@@ -1,7 +1,6 @@
 package com.szabolcs.SpringbootWebshop.Controller;
 
 import com.szabolcs.SpringbootWebshop.Dto.ProductDto;
-import com.szabolcs.SpringbootWebshop.ExceptionHandler.Exceptions.ProductNotFoundException;
 import com.szabolcs.SpringbootWebshop.Model.Product;
 import com.szabolcs.SpringbootWebshop.Service.Productservice;
 import org.springframework.http.HttpStatus;
@@ -28,19 +27,13 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable int id) {
-    Optional<Product>product = productservice.getProductById(id);
-    if (product.isEmpty()) {
-        throw new ProductNotFoundException("Product not found with id: "+id);
-    }
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(product.get());
+        Optional<Product>product = productservice.getProductById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(product.get());
     }
 
     @PostMapping
     public ResponseEntity<Product> addEmployee(@RequestBody ProductDto productDto) {
         Optional<Product> product = productservice.createProduct(productDto);
-        if (product.isEmpty()) {
-            throw new IllegalArgumentException("Can not create Product due to given data format problem");
-        }
         return ResponseEntity.status(HttpStatus.CREATED).body(product.get());
     }
 
