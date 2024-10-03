@@ -1,15 +1,59 @@
 package com.szabolcs.SpringbootWebshop.Controller;
 
+import com.szabolcs.SpringbootWebshop.Dto.ProductDto;
+import com.szabolcs.SpringbootWebshop.ExceptionHandler.Exceptions.ProductNotFoundException;
 import com.szabolcs.SpringbootWebshop.Model.Product;
-import com.szabolcs.SpringbootWebshop.Repository.FakeProductRepo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.szabolcs.SpringbootWebshop.Service.Productservice;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
+
+    private final Productservice productservice;
+
+     public ProductController(Productservice productservice) {
+         this.productservice = productservice;
+     }
+
+    @GetMapping
+    public ResponseEntity<List<Product>> getAllProducts() {
+        return ResponseEntity.status(HttpStatus.OK).body(productservice.getAllProducts());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable int id) {
+    Optional<Product>product = productservice.getProductById(id);
+    if (product.isEmpty()) {
+        throw new ProductNotFoundException("Product not found with id: "+id);
+    }
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(product.get());
+    }
+
+    @PostMapping
+    public ResponseEntity<Product> addEmployee(@RequestBody ProductDto productDto) {
+        Optional<Product> product = productservice.createProduct(productDto);
+        if (product.isEmpty()) {
+            throw new IllegalArgumentException("Can not create Product due to given data format problem");
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(product.get());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateProduct(@RequestBody ProductDto productDto, @PathVariable long id) {
+         productservice.updateProduct(productDto, id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteOneProductById(@PathVariable long id) {
+        productservice.deleteProduct(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
 }
