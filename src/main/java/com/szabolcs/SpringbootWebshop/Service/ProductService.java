@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class Productservice implements IProductService{
+public class ProductService implements IProductService{
 
     private final FakeProductRepo fakeProductRepo;
 
-    public Productservice(FakeProductRepo fakeProductRepo) {
+    public ProductService(FakeProductRepo fakeProductRepo) {
         this.fakeProductRepo = fakeProductRepo;
     }
 
@@ -24,33 +24,43 @@ public class Productservice implements IProductService{
     }
 
     @Override
-    public Optional<Product> getProductById(long id) {
-        return fakeProductRepo.findById(id);
+    public Product getProductById(long id) {
+        Optional<Product> product = fakeProductRepo.findById(id);
+        if(product.isEmpty()){
+            throw new ProductNotFoundException("No product to found with id :" + id);
+        }
+        return product.get();
     }
 
     @Override
-    public Optional<Product> createProduct(ProductDto productDto) {
-        Product product = new Product();
-        product.setName(productDto.name());
-        product.setPrice(productDto.price());
-        product.setDescription(productDto.description());
-        return Optional.of(fakeProductRepo.save(product));
+    public Product createProduct(ProductDto productDto) {
+        Product newProduct = new Product();
+        mapProductToDtoProduct(newProduct, productDto);
+        return fakeProductRepo.save(newProduct);
     }
 
     @Override
     public void updateProduct(ProductDto productDto, long id) {
         Optional<Product> product = fakeProductRepo.findById(id);
-        fakeProductRepo.deleteById(product.get().getId());
+        if(product.isEmpty()){
+            throw new ProductNotFoundException("No product to update with id :" + id);
+        }
+        fakeProductRepo.deleteById(product.get());
         fakeProductRepo.save(mapProductToDtoProduct(product.get(), productDto));
 
     }
 
     @Override
     public void deleteProduct(long id) {
-        fakeProductRepo.deleteById(id);
+        Optional<Product> product = fakeProductRepo.findById(id);
+        if(product.isEmpty()){
+            throw new ProductNotFoundException("No product to delete with id :" + id);
+        }
+        fakeProductRepo.deleteById(product.get());
     }
 
-    private Product mapProductToDtoProduct(Product product, ProductDto productDto) {
+
+    public Product mapProductToDtoProduct(Product product, ProductDto productDto) {
         product.setName(productDto.name());
         product.setPrice(productDto.price());
         product.setDescription(productDto.description());
