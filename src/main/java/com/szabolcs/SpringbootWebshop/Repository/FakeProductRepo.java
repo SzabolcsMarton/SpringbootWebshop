@@ -1,6 +1,6 @@
 package com.szabolcs.SpringbootWebshop.Repository;
 
-import com.szabolcs.SpringbootWebshop.ExceptionHandler.Exceptions.ProductNotFoundException;
+
 import com.szabolcs.SpringbootWebshop.Model.Product;
 import com.szabolcs.SpringbootWebshop.Utils.FakerGenerator;
 import jakarta.annotation.PostConstruct;
@@ -26,26 +26,19 @@ public class FakeProductRepo {
     }
 
     public Optional<Product> findById(long id){
-        Optional<Product> product = products.stream().filter(p -> p.getId() == id).findFirst();
-        if(product.isEmpty()){
-            throw new ProductNotFoundException("Not found Product with id :" + id);
-        }
-        return product;
+        return products.stream().filter(p -> p.getId() == id).findFirst();
     }
 
     public Product save(Product product){
         if(product.getId() == 0){
-            product.setId(getNextId());
+            product.setId(this.getNextId());
         }
         products.add(product);
         return product;
     }
 
-    public void deleteById(long id){
-        if(products.stream().filter(product -> product.getId() == id).findFirst().isEmpty()){
-            throw new ProductNotFoundException("No product to delete with id :" + id);
-        }
-        products.removeIf(product -> product.getId() == id);
+    public void deleteById(Product product){
+        products.remove(product);
     }
 
     private long getNextId(){
