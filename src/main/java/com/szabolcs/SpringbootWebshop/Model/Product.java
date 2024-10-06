@@ -1,10 +1,21 @@
 package com.szabolcs.SpringbootWebshop.Model;
 
+import jakarta.persistence.*;
+
+
+@Entity
 public class Product {
 
+    @Id
+    @SequenceGenerator(name = "seqGenProduct", sequenceName = "productIdSeq", initialValue = 1000, allocationSize = 1)
+    @GeneratedValue(generator = "seqGenProduct")
+    @Column(name = "user_id")
     private long id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "price")
     private double price;
+    @Column(name = "description")
     private String description;
 
     public Product() {
