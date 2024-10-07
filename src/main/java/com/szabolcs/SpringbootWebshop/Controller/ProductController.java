@@ -3,6 +3,7 @@ package com.szabolcs.SpringbootWebshop.Controller;
 import com.szabolcs.SpringbootWebshop.Dto.ProductDto;
 import com.szabolcs.SpringbootWebshop.Model.Product;
 import com.szabolcs.SpringbootWebshop.Service.ProductService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +48,22 @@ public class ProductController {
     public ResponseEntity<Void> deleteOneProductById(@PathVariable long id) {
         productservice.deleteProduct(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+
+    @GetMapping("/range")
+    public ResponseEntity<List<Product>> getAllProducts(@RequestParam Double min, @RequestParam Double max) {
+        return ResponseEntity.ok(productservice.getProductsByPriceRange(min, max));
+    }
+
+    @GetMapping("/search/name")
+    public ResponseEntity<List<Product>> getAllProductsWithPartOfName(@RequestParam String name) {
+        return ResponseEntity.status(HttpStatus.OK).body(productservice.getProductsByNamePart(name));
+    }
+
+    @GetMapping("/search/description")
+    public ResponseEntity<List<Product>> getAllProductsWithPartOfDescription(@RequestParam String description) {
+        return ResponseEntity.status(HttpStatus.OK).body(productservice.getProductsByDescriptionPart(description));
     }
 
 }

@@ -6,6 +6,7 @@ import com.szabolcs.SpringbootWebshop.Model.Product;
 import com.szabolcs.SpringbootWebshop.Repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,13 @@ public class ProductService implements IProductService{
 
     public ProductService(ProductRepository productrepo) {
         this.productrepo = productrepo;
+    }
+
+    public static Product mapProductDtoToProduct(Product product, ProductDto productDto) {
+        product.setName(productDto.name());
+        product.setPrice(productDto.price());
+        product.setDescription(productDto.description());
+        return product;
     }
 
     @Override
@@ -57,10 +65,29 @@ public class ProductService implements IProductService{
         productrepo.deleteById(id);
     }
 
-    public static Product mapProductDtoToProduct(Product product, ProductDto productDto) {
-        product.setName(productDto.name());
-        product.setPrice(productDto.price());
-        product.setDescription(productDto.description());
-        return product;
+    public List<Product> getProductsByPriceRange(double min, double max) {
+        List<Product> products = productrepo.findProductByPriceBetween(min, max);
+        if(products.isEmpty()){
+            throw new ProductNotFoundException("No products with between price: " + min + " and " + max);
+        }
+       return products;
     }
+
+    public List<Product> getProductsByNamePart(String namePart) {
+        List<Product> products = productrepo.findByNameContaining(namePart);
+        if(products.isEmpty()){
+            throw new ProductNotFoundException("No products with name: " + namePart);
+        }
+        return products;
+    }
+
+    public List<Product> getProductsByDescriptionPart(String descriptionPart) {
+        List<Product> products = productrepo.findByDescriptionContaining(descriptionPart);
+        if(products.isEmpty()){
+            throw new ProductNotFoundException("No products with description: " + descriptionPart);
+        }
+        return products;
+    }
+
+
 }
