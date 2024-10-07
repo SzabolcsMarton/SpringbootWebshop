@@ -1,9 +1,16 @@
 package com.szabolcs.SpringbootWebshop.Model;
 
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 
 
 @Entity
+@Table(name = "product")
+@EntityListeners(AuditingEntityListener.class)
 public class Product {
 
     @Id
@@ -13,10 +20,16 @@ public class Product {
     private long id;
     @Column(name = "name")
     private String name;
-    @Column(name = "price")
+    @Column(name = "price", precision = 2)
     private double price;
     @Column(name = "description")
     private String description;
+    @Column(name = "created_at")
+    @CreatedDate
+    private LocalDateTime createdAt;
+    @Column(name = "last_modified")
+    @LastModifiedDate
+    private LocalDateTime lastModified;
 
     public Product() {
     }
@@ -60,6 +73,21 @@ public class Product {
         this.description = description;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(LocalDateTime lastModified) {
+        this.lastModified = lastModified;
+    }
 
     @Override
     public String toString() {
