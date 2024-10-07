@@ -37,7 +37,6 @@ class ProductServiceTest {
     @InjectMocks
     ProductService productservice;
 
-
     //*** findAll test ***
     @Test
     public void find_all_products_test_should_return_5_products() {
