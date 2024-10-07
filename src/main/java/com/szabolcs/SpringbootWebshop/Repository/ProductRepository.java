@@ -10,7 +10,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, PagingA
 
     List<Product> findProductByPriceBetween(Double min, Double max);
 
-    List<Product> findByNameContaining(String name);
+    List<Product> findByNameContainingIgnoreCase(String name);
 
-    List<Product> findByDescriptionContaining(String name);
+    List<Product> findByDescriptionContainingIgnoreCase(String name);
 }

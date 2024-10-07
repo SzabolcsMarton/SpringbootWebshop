@@ -74,7 +74,7 @@ public class ProductService implements IProductService{
     }
 
     public List<Product> getProductsByNamePart(String namePart) {
-        List<Product> products = productrepo.findByNameContaining(namePart);
+        List<Product> products = productrepo.findByNameContainingIgnoreCase(namePart);
         if(products.isEmpty()){
             throw new ProductNotFoundException("No products with name: " + namePart);
         }
@@ -82,7 +82,7 @@ public class ProductService implements IProductService{
     }
 
     public List<Product> getProductsByDescriptionPart(String descriptionPart) {
-        List<Product> products = productrepo.findByDescriptionContaining(descriptionPart);
+        List<Product> products = productrepo.findByDescriptionContainingIgnoreCase(descriptionPart);
         if(products.isEmpty()){
             throw new ProductNotFoundException("No products with description: " + descriptionPart);
         }
