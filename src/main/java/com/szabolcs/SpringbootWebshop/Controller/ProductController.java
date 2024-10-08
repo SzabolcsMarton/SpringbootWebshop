@@ -3,13 +3,13 @@ package com.szabolcs.SpringbootWebshop.Controller;
 import com.szabolcs.SpringbootWebshop.Dto.ProductDto;
 import com.szabolcs.SpringbootWebshop.Model.Product;
 import com.szabolcs.SpringbootWebshop.Service.ProductService;
-import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/products")
@@ -17,12 +17,13 @@ public class ProductController {
 
     private final ProductService productservice;
 
+
     public ProductController(ProductService productservice) {
         this.productservice = productservice;
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
+    public ResponseEntity<List<Product>> getAllProductsInPriceRange() {
         return ResponseEntity.status(HttpStatus.OK).body(productservice.getAllProducts());
     }
 
@@ -50,9 +51,19 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    /// Not basic CRUD endpoints
+
+    @GetMapping("/paged")
+    public ResponseEntity<PagedModel<EntityModel<Product>>> getAllProductsPaged(@RequestParam(required = false) String sortBy,
+                                                                                @RequestParam int page, @RequestParam int size) {
+        if(sortBy != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(productservice.gelAllProductPaginatedSortedBy(page, size, sortBy));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(productservice.gelAllProductPaginated(page, size));
+    }
 
     @GetMapping("/range")
-    public ResponseEntity<List<Product>> getAllProducts(@RequestParam Double min, @RequestParam Double max) {
+    public ResponseEntity<List<Product>> getAllProductsInPriceRange(@RequestParam Double min, @RequestParam Double max) {
         return ResponseEntity.ok(productservice.getProductsByPriceRange(min, max));
     }
 
