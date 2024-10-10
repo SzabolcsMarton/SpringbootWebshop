@@ -30,7 +30,11 @@ public class UserService implements IUserService {
 
     @Override
     public List<User> getAllUser() {
-        return userRepository.findAll();
+        List<User> users = userRepository.findAll();
+        if (users.isEmpty()) {
+            throw new UserNotFoundException("No users at all");
+        }
+        return users;
     }
 
     @Override

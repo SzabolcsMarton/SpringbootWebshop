@@ -2,6 +2,7 @@ package com.szabolcs.SpringbootWebshop.Service;
 
 import com.szabolcs.SpringbootWebshop.Dto.ProductDto;
 import com.szabolcs.SpringbootWebshop.ExceptionHandler.Exceptions.ProductNotFoundException;
+import com.szabolcs.SpringbootWebshop.ExceptionHandler.Exceptions.UserNotFoundException;
 import com.szabolcs.SpringbootWebshop.Model.Product;
 import com.szabolcs.SpringbootWebshop.Repository.ProductRepository;
 import org.springframework.data.domain.Page;
@@ -38,7 +39,11 @@ public class ProductService implements IProductService{
 
     @Override
     public List<Product> getAllProducts() {
-        return productRepository.findAll();
+        List<Product> products = productRepository.findAll();
+        if (products.isEmpty()) {
+            throw new UserNotFoundException("No products at all");
+        }
+        return products;
     }
 
     @Override
