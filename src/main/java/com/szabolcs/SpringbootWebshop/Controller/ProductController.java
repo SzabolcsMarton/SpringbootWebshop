@@ -17,7 +17,6 @@ public class ProductController {
 
     private final ProductService productservice;
 
-
     public ProductController(ProductService productservice) {
         this.productservice = productservice;
     }
