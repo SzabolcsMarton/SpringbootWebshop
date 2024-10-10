@@ -1,6 +1,7 @@
 package com.szabolcs.SpringbootWebshop.Service;
 
 import com.szabolcs.SpringbootWebshop.Dto.UserDto;
+import com.szabolcs.SpringbootWebshop.ExceptionHandler.Exceptions.UserAlreadyExistsException;
 import com.szabolcs.SpringbootWebshop.ExceptionHandler.Exceptions.UserNotFoundException;
 import com.szabolcs.SpringbootWebshop.Model.User;
 import com.szabolcs.SpringbootWebshop.Repository.UserRepository;
@@ -22,9 +23,9 @@ public class UserService implements IUserService {
     public static User mapUserDtoToUser(User user, UserDto userDto) {
         user.setFirstName(userDto.firstName());
         user.setLastName(userDto.lastName());
+        user.setAddress(userDto.address());
         user.setEmail(userDto.email());
         return user;
-
     }
 
     @Override
@@ -42,7 +43,10 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User createUser(UserDto userDto) {
+    public User registerUser(UserDto userDto) {
+        if(userRepository.existsByEmail(userDto.email())){
+            throw new UserAlreadyExistsException("User already exists with email: " + userDto.email());
+        }
         User newUser = new User();
         mapUserDtoToUser(newUser, userDto);
         return userRepository.save(newUser);
@@ -52,7 +56,7 @@ public class UserService implements IUserService {
     public void updateUser(UserDto userDto, long id) {
         Optional<User> updatedUser = userRepository.findById(id);
         if(updatedUser.isEmpty()){
-            throw new UserNotFoundException("No product to update with id :" + id);
+            throw new UserNotFoundException("No user to update with id :" + id);
         }
         userRepository.save(mapUserDtoToUser(updatedUser.get(), userDto));
     }
@@ -61,8 +65,11 @@ public class UserService implements IUserService {
     public void deleteUser(long id) {
         Optional<User> updatedUser = userRepository.findById(id);
         if(updatedUser.isEmpty()){
-            throw new UserNotFoundException("No product to update with id :" + id);
+            throw new UserNotFoundException("No user to update with id :" + id);
         }
         userRepository.deleteById(id);
     }
+
+
+
 }
