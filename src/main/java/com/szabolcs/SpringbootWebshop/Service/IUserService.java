@@ -9,7 +9,7 @@ public interface IUserService {
 
     List<User> getAllUser();
     User getUserById(long id);
-    User createUser(UserDto user);
+    User registerUser(UserDto user);
     void updateUser(UserDto user, long id);
     void deleteUser(long id);
 
