@@ -1,9 +1,15 @@
 package com.szabolcs.SpringbootWebshop.Model;
 
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user")
+@EntityListeners(AuditingEntityListener.class)
 public class User {
 
     @Id
@@ -14,6 +20,12 @@ public class User {
     private String lastName;
     private String email;
     private String address;
+    @Column(name = "created_at")
+    @CreatedDate
+    private LocalDateTime createdAt;
+    @Column(name = "last_modified")
+    @LastModifiedDate
+    private LocalDateTime lastModified;
 
     public User() {
     }
