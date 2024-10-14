@@ -85,7 +85,6 @@ public class ProductService implements IProductService{
 
     public PagedModel<EntityModel<Product>> gelAllProductPaginated(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        System.out.println(pageable);
         Page<Product> pageResult = productRepository.findAll(pageable);
         return pagedResourcesAssembler.toModel(pageResult);
     }
