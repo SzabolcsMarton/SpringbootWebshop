@@ -5,6 +5,7 @@ import com.szabolcs.SpringbootWebshop.ExceptionHandler.Exceptions.ProductNotFoun
 import com.szabolcs.SpringbootWebshop.ExceptionHandler.Exceptions.UserNotFoundException;
 import com.szabolcs.SpringbootWebshop.Model.Product;
 import com.szabolcs.SpringbootWebshop.Repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class ProductService implements IProductService{
 
     private final ProductRepository productRepository;
