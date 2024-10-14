@@ -38,7 +38,6 @@ public class LoginController {
             );
 
             String token = jwtService.generateToken((UserDetails) authentication.getPrincipal());
-            System.out.println("login token: " + token);
             return ResponseEntity.ok(new AuthResponseDto(token));
         }catch (BadCredentialsException exception) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");

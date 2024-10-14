@@ -38,7 +38,6 @@ public class JwtService {
 
     // Token létrehozása, expiration idő beállításával
     private String createToken(Map<String, Object> claims, String subject) {
-        //Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
         Key key = getSignInKey();
         long expir = Long.parseLong(expiration);
         return Jwts.builder()
@@ -47,38 +46,27 @@ public class JwtService {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expir)) // 10 óra
                 .signWith(key, SignatureAlgorithm.HS256)
-               // .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 
     // Token validálása
     public boolean validateToken(String token, UserDetails userDetails) {
-        System.out.println("token validálásnál: " + token);
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     // Kivonja a felhasználónevet (itt e-mail címként használjuk)
     public String extractUsername(String token) {
-        String username =  extractClaim(token, Claims::getSubject);
-        System.out.println("extraxt username: " + username);
-        return username;
+         return extractClaim(token, Claims::getSubject);
     }
 
     // Kivonja a tokenből a megadott claim-et
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        System.out.println("extract claim");
         final Claims claims = extractAllClaims(token);
-        System.out.println("extracted claims: " + claims.toString());
         return claimsResolver.apply(claims);
     }
 
-//    private Claims extractAllClaims(String token) {
-//        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
-//    }
-
     public Claims extractAllClaims(String token) {
-        System.out.println(token);
         JwtParser jwtParser = Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build();
